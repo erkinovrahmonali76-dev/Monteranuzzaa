@@ -1,0 +1,138 @@
+<!doctype html><html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MONTERA.UZ</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fafafa;--fg:#0d0d0d;--mut:#7b7b7b;--line:#e2e2e2;--card:#ececec}
+:root[data-t=dark]{--bg:#0d0d0d;--fg:#f2f2f2;--mut:#8b8b8b;--line:#262626;--card:#1a1a1a}
+*{box-sizing:border-box;margin:0}
+body{font:14px/1.45 Manrope,sans-serif;background:var(--bg);color:var(--fg);padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+button,input,select,textarea{font:inherit;color:inherit}
+header{padding:calc(12px + env(safe-area-inset-top)) 16px 8px;position:sticky;top:0;background:var(--bg);z-index:5}
+.logo{font:700 24px 'Bodoni Moda',serif;letter-spacing:.05em;margin-bottom:10px}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);background:transparent;border-radius:0;margin-top:4px}
+label{display:block;margin-top:12px;color:var(--mut)}
+#sg .sgi{padding:10px 12px;border:1px solid var(--line);border-top:0;background:var(--bg)}
+.btn{display:block;width:100%;padding:15px;background:var(--fg);color:var(--bg);border:0;font-weight:700;letter-spacing:.08em;margin-top:14px}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--fg)}
+.btn:disabled{opacity:.4}
+.banner{margin:8px 16px;padding:40px 22px 26px;background:#0d0d0d;color:#f2f2f2}
+.banner h1{font:500 44px/.98 'Bodoni Moda',serif;letter-spacing:.01em}
+.banner p{margin:14px 0 4px;color:#a8a8a8}
+.banner .btn{background:#f2f2f2;color:#0d0d0d;width:auto;padding:12px 26px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;scrollbar-width:none}
+.chip{flex:none;padding:8px 14px;border:1px solid var(--line);background:none;border-radius:99px}
+.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip:disabled{opacity:.3;text-decoration:line-through}
+h2{font:500 22px 'Bodoni Moda',serif;padding:20px 16px 10px}
+h3{font:500 22px 'Bodoni Moda',serif;margin-bottom:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 10px;padding:0 16px}
+.card{cursor:pointer}
+.ph{aspect-ratio:3/4;background:var(--card) center/cover;display:grid;place-items:center;color:var(--mut);font:500 40px 'Bodoni Moda',serif;position:relative}
+.heart{position:absolute;right:6px;top:6px;border:0;background:var(--bg);width:32px;height:32px;border-radius:50%;font-size:16px}
+.badge{position:absolute;left:0;top:8px;background:var(--fg);color:var(--bg);padding:3px 8px;font:700 12px Manrope}
+.old{color:var(--mut);text-decoration:line-through;margin-left:6px;font-size:12px}
+.mut{color:var(--mut)} .pad{padding:16px} .grow{flex:1}
+.row{display:flex;gap:8px;padding:0 16px 14px;align-items:center}.row select{margin:0}
+.empty{padding:40px 16px;text-align:center;color:var(--mut)}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav button{flex:1;padding:16px 0;border:0;background:none;font-size:12px;color:var(--mut)}
+nav button.on{color:var(--fg);font-weight:700}
+.sheet{position:fixed;inset:0;background:var(--bg);overflow:auto;z-index:20;padding-bottom:40px}
+.back{border:0;background:none;padding:calc(14px + env(safe-area-inset-top)) 16px 10px;font-weight:700}
+.gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.gal .ph{flex:none;width:100%;scroll-snap-align:start}
+.price{font-size:18px;margin:4px 0 10px}
+.line{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:center}
+.th{width:64px;height:84px;background:var(--card) center/cover;flex:none}
+.qty{display:flex;align-items:center;gap:12px}.qty button{width:32px;height:32px;border:1px solid var(--line);background:none}
+.sum{display:flex;justify-content:space-between;padding:5px 0}
+.ord{padding:14px 16px;border-bottom:1px solid var(--line)}.ord select{margin-top:8px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.stats div{border:1px solid var(--line);padding:12px;display:flex;flex-direction:column}.stats b{font-size:18px}
+.promo{display:flex;gap:8px;align-items:flex-end}.promo .btn{margin:0}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:12px 18px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30;max-width:88%;text-align:center}
+#toast.show{opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header id="hd"></header><main id="app"></main><nav id="nv"></nav><div id="sheet"></div><div id="toast"></div>
+<script>
+const tg=window.Telegram?.WebApp;tg?.ready();tg?.expand();
+document.documentElement.dataset.t=tg?.colorScheme||'light';
+const $=s=>document.querySelector(s);
+const money=n=>Number(n).toLocaleString('ru-RU')+' so‘m';
+const H=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const img=u=>u&&u.startsWith('tg:')?'/img/'+u.slice(3):u||'';
+const csv=s=>s.split(',').map(x=>x.trim()).filter(Boolean);
+const ST={new:'🟡 Yangi',confirmed:'🔵 Tasdiqlangan',preparing:'🟠 Tayyorlanmoqda',shipping:'🚚 Yetkazilmoqda',delivered:'🟢 Yetkazildi',cancelled:'🔴 Bekor qilindi'};
+const REG=['Toshkent shahri','Toshkent viloyati','Andijon','Buxoro','Farg‘ona','Jizzax','Xorazm','Namangan','Navoiy','Qashqadaryo','Qoraqalpog‘iston','Samarqand','Sirdaryo','Surxondaryo'];
+const S={tab:'home',P:[],fav:new Set(),cart:JSON.parse(localStorage.mc||'[]'),cat:'',sort:'new',sale:false,size:'',q:'',view:null,pick:{},co:false,f:JSON.parse(localStorage.mf||'{}'),promo:null,orders:[],me:{},cfg:{categories:[],tashkent:0,region:0},adm:null};
+const P=id=>S.P.find(p=>p.id==id),pct=p=>p.old_price>p.price?Math.round(100-p.price/p.old_price*100):0;
+const avail=p=>Object.values(p.stock||{}).reduce((a,b)=>a+b,0);
+const subtotal=()=>S.cart.reduce((a,i)=>a+(P(i.id)?.price||0)*i.q,0);
+const save=()=>localStorage.mc=JSON.stringify(S.cart);
+async function api(p,o={}){const r=await fetch('/api'+p,{...o,headers:{'Content-Type':'application/json','X-Init-Data':tg?.initData||''},body:o.body&&JSON.stringify(o.body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(typeof j.detail==='string'?j.detail:'Xatolik. Ma’lumotlarni tekshirib, qayta urinib ko‘ring');return j}
+const A=(p,o)=>api('/admin'+p,o);
+function toast(m){const t=$('#toast');t.textContent=m;t.className='show';clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600)}
+const card=p=>`<div class=card data-a=open data-id=${p.id}><div class=ph style="${p.images[0]?`background-image:url(${img(p.images[0])})`:''}">${p.images[0]?'':H(p.name[0])}${pct(p)?`<span class=badge>-${pct(p)}%</span>`:''}${avail(p)?'':'<span class=badge style="top:auto;bottom:8px;background:var(--mut)">Tugagan</span>'}<button class=heart data-a=fav data-id=${p.id}>${S.fav.has(p.id)?'♥':'♡'}</button></div><div style="padding-top:8px;font-weight:500">${H(p.name)}</div><div>${money(p.price)}${p.old_price>p.price?`<span class=old>${money(p.old_price)}</span>`:''}</div></div>`;
+const grid=l=>l.length?`<div class=grid>${l.map(card).join('')}</div>`:'<p class=empty>Hech narsa topilmadi</p>';
+const chips=()=>`<div class=chips>${['',...S.cfg.categories].map(c=>`<button class="chip ${S.cat===c&&S.tab==='shop'?'on':''}" data-a=cat data-v="${H(c)}">${c||'Hammasi'}</button>`).join('')}</div>`;
+const home=()=>{const by=f=>[...S.P].sort(f).slice(0,6),sale=S.P.filter(pct).slice(0,6);return `<div class=banner><h1>NEW<br>COLLECTION</h1><p>Erkaklar uchun zamonaviy uslub</p><button class=btn data-a=shop>KO‘RISH</button></div>${chips()}<h2>Trending</h2>${grid(by((a,b)=>b.sold-a.sold))}<h2>Yangi kelganlar</h2>${grid(by((a,b)=>b.id-a.id))}${sale.length?`<h2>Chegirmalar</h2>${grid(sale)}`:''}`};
+const list=()=>S.P.filter(p=>(!S.cat||p.category===S.cat)&&(!S.sale||pct(p))&&(!S.size||Object.entries(p.stock).some(([k,v])=>v>0&&k.endsWith('|'+S.size)))&&(!S.q||(p.name+' '+p.category).toLowerCase().includes(S.q))).sort({new:(a,b)=>b.id-a.id,asc:(a,b)=>a.price-b.price,desc:(a,b)=>b.price-a.price,pop:(a,b)=>b.sold-a.sold}[S.sort]);
+const shop=()=>`${chips()}<div class=row><select data-a=sort>${[['new','Yangi'],['asc','Arzon → qimmat'],['desc','Qimmat → arzon'],['pop','Mashhur']].map(([v,t])=>`<option value=${v} ${S.sort===v?'selected':''}>${t}</option>`).join('')}</select><select data-a=size><option value="">Razmer</option>${['S','M','L','XL','2XL','3XL'].map(s=>`<option ${S.size===s?'selected':''}>${s}</option>`).join('')}</select><button class="chip ${S.sale?'on':''}" data-a=sale>Chegirma</button></div>${grid(list())}`;
+const favs=()=>`<h2>Sevimlilar</h2>${grid(S.P.filter(p=>S.fav.has(p.id)))}`;
+const cart=()=>{const L=S.cart.map((i,k)=>({i,k,p:P(i.id)})).filter(x=>x.p);if(!L.length)return '<h2>Savat</h2><p class=empty>Savat bo‘sh</p>';const sub=subtotal();return `<h2>Savat</h2>${L.map(({i,k,p})=>`<div class=line><div class=th style="background-image:url(${img(p.images[0])})"></div><div class=grow><b>${H(p.name)}</b><div class=mut>${H(i.c)} · ${H(i.s)}</div><div>${money(p.price*i.q)}</div></div><div class=qty><button data-a=dec data-k=${k}>−</button>${i.q}<button data-a=inc data-k=${k}>+</button></div></div>`).join('')}<div class=pad><div class=sum><span>Mahsulotlar</span><span>${money(sub)}</span></div><div class=sum><span>Yetkazib berish</span><span class=mut>${money(S.cfg.tashkent)} – ${money(S.cfg.region)}</span></div><div class=sum><b>Jami</b><b>${money(sub)}</b></div><button class=btn data-a=checkout>BUYURTMA BERISH</button></div>`};
+const prof=()=>`<div class=pad><h3>${H(S.me.first_name||'Profil')}</h3>${S.me.is_admin?'<button class="btn ghost" data-a=adm>ADMIN PANEL</button>':''}</div><h2>Buyurtmalarim</h2>${S.orders.length?S.orders.map(o=>`<div class=ord><div class=sum><b>#${o.number}</b><span>${ST[o.status]}</span></div><div class=mut>${o.items.map(i=>H(i.name)+' ×'+i.qty).join(', ')}</div><div>${money(o.total)}</div></div>`).join(''):'<p class=empty>Hali buyurtma yo‘q</p>'}`;
+const gf=(k,l,ph='')=>`<label>${l}<input data-g=${k} placeholder="${ph}"></label>`;
+const adm=()=>{const a=S.adm;if(!a)return '<p class=empty>Yuklanmoqda…</p>';const s=a.stats;return `<div class=pad><button class=back style="padding:0" data-a=tab data-v=prof>← Profil</button><h3 style="margin-top:12px">Admin</h3><div class=stats>${[['Foydalanuvchilar',s.users],['Bugun yangi',s.new_users],['Buyurtmalar',s.orders],['Bugun',s.orders_today],['Daromad',money(s.revenue)],['Bugungi daromad',money(s.revenue_today)]].map(([l,v])=>`<div><b>${v}</b><span class=mut>${l}</span></div>`).join('')}</div><p class=mut>Top: ${s.top.map(t=>H(t.name)+' ('+t.sold+')').join(', ')||'—'}</p></div>
+<h2>Buyurtmalar</h2>${a.orders.map(o=>`<div class=ord><div class=sum><b>#${o.number}</b><span>${money(o.total)}</span></div><div class=mut>${H(o.name)} · ${H(o.phone)}<br>${H(o.region)}, ${H(o.city)}, ${H(o.address)}</div><div>${o.items.map(i=>H(i.name)+' '+H(i.color)+'/'+H(i.size)+' ×'+i.qty).join('<br>')}</div><select data-a=ost data-id=${o.id}>${Object.entries(ST).map(([k,v])=>`<option value=${k} ${o.status===k?'selected':''}>${v}</option>`).join('')}</select></div>`).join('')||'<p class=empty>Buyurtma yo‘q</p>'}
+<h2>Mahsulotlar</h2>${a.products.map(p=>`<div class=ord><div class=sum><b>${H(p.name)}</b><span>${money(p.price)}</span></div><div class=mut>Qoldiq: ${avail(p)} · ${p.active?'ko‘rinadi':'yashirin'}</div><div class=row style="padding:8px 0 0"><button class=chip data-a=aht data-id=${p.id}>${p.active?'Yashirish':'Ko‘rsatish'}</button><button class=chip data-a=adl data-id=${p.id}>O‘chirish</button></div></div>`).join('')}
+<div class=pad><h3>Yangi mahsulot</h3>${gf('name','Nomi')}<label>Kategoriya<select data-g=category>${S.cfg.categories.map(c=>`<option>${c}</option>`).join('')}</select></label>${gf('price','Narx','249000')}${gf('old_price','Eski narx (ixtiyoriy)')}${gf('colors','Ranglar (vergul bilan)','Black, White')}${gf('sizes','Razmerlar','S, M, L, XL')}${gf('stock','Ombor: rang|razmer=soni','Black|M=5, Black|L=3, White|M=8')}${gf('images','Rasm kodlari (botga rasm yuboring → tg:… kodi)')}${gf('material','Material')}${gf('sku','Mahsulot kodi')}<label>Tavsif<textarea data-g=description rows=3></textarea></label><button class=btn data-a=admadd>MAHSULOT QO‘SHISH</button></div>
+<div class=pad><h3>Promo kod</h3>${gf('pcode','Kod','MONTERA10')}${gf('ppct','Foiz','10')}${gf('pfix','Yoki aniq summa','0')}${gf('plim','Foydalanish limiti (ixtiyoriy)')}<button class=btn data-a=admpromo>PROMO YARATISH</button><p class=mut style="margin-top:8px">${a.promos.map(p=>H(p.code)+' ('+(p.percent?p.percent+'%':money(p.fixed))+', '+p.used+' marta)').join(' · ')}</p></div>
+<div class=pad><h3>Yetkazib berish narxi</h3>${gf('ft','Toshkent shahri',S.cfg.tashkent)}${gf('fr','Viloyatlar',S.cfg.region)}<button class=btn data-a=admfee>SAQLASH</button></div>
+<div class=pad><h3>Xabar yuborish</h3><label>Matn<textarea data-g=bc rows=4></textarea></label><button class=btn data-a=admbc>HAMMAGA YUBORISH</button></div>`};
+function sheetProd(){const p=S.view,k=S.pick,st=p.stock||{},n=k.s?st[k.c+'|'+k.s]||0:avail(p);return `<div class=sheet><button class=back data-a=close>← Orqaga</button><div class=gal>${(p.images.length?p.images:['']).map(i=>`<div class=ph style="${i?`background-image:url(${img(i)})`:''}">${i?'':H(p.name[0])}</div>`).join('')}</div><div class=pad><h3>${H(p.name)}</h3><div class=price>${money(p.price)}${p.old_price>p.price?`<span class=old>${money(p.old_price)}</span> <b>-${pct(p)}%</b>`:''}</div><p>${H(p.description)}</p><label>Rang</label><div class=chips style="padding:6px 0">${p.colors.map(c=>`<button class="chip ${k.c===c?'on':''}" data-a=pc data-v="${H(c)}">${H(c)}</button>`).join('')}</div><label>Razmer</label><div class=chips style="padding:6px 0">${p.sizes.map(s=>`<button class="chip ${k.s===s?'on':''}" data-a=ps data-v="${H(s)}" ${st[k.c+'|'+s]>0?'':'disabled'}>${H(s)}</button>`).join('')}</div><div class=mut style="margin:8px 0">${p.material?'Material: '+H(p.material)+' · ':''}${p.sku?'Kod: '+H(p.sku)+' · ':''}Qoldiq: ${n}</div><button class=btn data-a=add ${avail(p)?'':'disabled'}>${avail(p)?'SAVATGA QO‘SHISH':'TUGAGAN'}</button></div></div>`}
+const feeNow=()=>!S.f.region?null:S.f.region==='Toshkent shahri'?S.cfg.tashkent:S.cfg.region,disc=()=>S.promo?.discount||0;
+function sum(){const sub=subtotal(),fe=feeNow();return `<div class=sum><span>Mahsulotlar</span><span>${money(sub)}</span></div>${disc()?`<div class=sum><span>Chegirma (${H(S.promo.code)})</span><span>−${money(disc())}</span></div>`:''}<div class=sum><span>Yetkazib berish</span><span>${fe==null?'Hududni tanlang':money(fe)}</span></div><div class=sum><b>Jami</b><b>${money(sub-disc()+(fe||0))}</b></div>`}
+const fld=(k,l,t='text')=>`<label>${l}<input data-f=${k} type=${t} value="${H(S.f[k]||'')}"></label>`;
+const sheetCo=()=>`<div class=sheet><button class=back data-a=close>← Orqaga</button><div class=pad><h3>Buyurtma</h3>${fld('name','Ism')}${fld('phone','Telefon (+998…)','tel')}<label>Viloyat<select data-f=region><option value="">Tanlang</option>${REG.map(r=>`<option ${S.f.region===r?'selected':''}>${r}</option>`).join('')}</select></label>${fld('city','Tuman / shahar')}${fld('address','Manzil')}${fld('note','Izoh (ixtiyoriy)')}<div class=chips style="padding:12px 0 0"><button class="chip ${(S.f.delivery||'courier')==='courier'?'on':''}" data-a=dl data-v=courier>🚚 Kuryer</button><button class="chip ${S.f.delivery==='post'?'on':''}" data-a=dl data-v=post>📦 Pochta</button></div><div class=promo><label style="flex:1">Promo kod<input data-p value="${H(S.promo?.code||'')}"></label><button class="btn ghost" data-a=promo style="width:auto;padding:12px 16px">Qo‘llash</button></div><h3 style="margin-top:22px">Buyurtma xulosasi</h3><div id=sum>${sum()}</div><p class=mut>To‘lov: yetkazib berishda naqd</p><button class=btn data-a=place>BUYURTMANI TASDIQLASH</button></div></div>`;
+function page(){const st=$('.sheet')?.scrollTop;$('#app').innerHTML=({home,shop,fav:favs,cart,prof,adm})[S.tab]();$('#nv').innerHTML=[['home','Bosh sahifa'],['shop','Do‘kon'],['fav','Sevimlilar'],['cart','Savat'+(S.cart.length?` (${S.cart.reduce((a,i)=>a+i.q,0)})`:'')],['prof','Profil']].map(([k,t])=>`<button data-a=tab data-v=${k} class="${S.tab===k||(k==='prof'&&S.tab==='adm')?'on':''}">${t}</button>`).join('');$('#sheet').innerHTML=S.view?sheetProd():S.co?sheetCo():'';if(st)$('.sheet').scrollTop=st}
+async function loadAll(){const [cfg,me,Pr,fv,o]=await Promise.all([api('/config'),api('/me'),api('/products'),api('/favorites'),api('/orders')]);Object.assign(S,{cfg,me,P:Pr,fav:new Set(fv),orders:o})}
+async function admLoad(){const [stats,orders,products,promos]=await Promise.all([A('/stats'),A('/orders'),A('/products'),A('/promos')]);S.adm={stats,orders,products,promos};page()}
+const g=k=>$(`[data-g=${k}]`).value.trim();
+document.onclick=async e=>{const el=e.target.closest('[data-a]');if(!el)return;const a=el.dataset.a,v=el.dataset.v,id=+el.dataset.id,k=+el.dataset.k;
+try{switch(a){
+case 'tab':S.tab=v;S.view=null;if(v!=='shop')S.cat=S.cat;page();scrollTo(0,0);break;
+case 'shop':S.tab='shop';page();scrollTo(0,0);break;
+case 'cat':S.cat=v;S.tab='shop';page();break;
+case 'sale':S.sale=!S.sale;page();break;
+case 'sg':$('#q').value=v;S.q=v.toLowerCase();$('#sg').innerHTML='';S.tab='shop';page();break;
+case 'open':{const p=P(id);S.view=p;S.pick={c:p.colors.find(c=>p.sizes.some(s=>p.stock[c+'|'+s]>0))||p.colors[0],s:''};page();break}
+case 'close':S.view=null;S.co=false;page();break;
+case 'fav':{const r=await api('/favorites/'+id,{method:'POST'});r.fav?S.fav.add(id):S.fav.delete(id);page();break}
+case 'pc':S.pick={c:v,s:''};page();break;
+case 'ps':S.pick.s=v;page();break;
+case 'add':{const p=S.view,pk=S.pick;if(!pk.s)return toast('Avval razmer tanlang');const have=p.stock[pk.c+'|'+pk.s]||0,ex=S.cart.find(i=>i.id==p.id&&i.c==pk.c&&i.s==pk.s);if((ex?.q||0)+1>have)return toast('Omborda yetarli emas');ex?ex.q++:S.cart.push({id:p.id,c:pk.c,s:pk.s,q:1});save();S.view=null;toast('Savatga qo‘shildi');tg?.HapticFeedback?.impactOccurred('light');page();break}
+case 'inc':{const i=S.cart[k],p=P(i.id);if(i.q<(p.stock[i.c+'|'+i.s]||0))i.q++;else toast('Omborda boshqa yo‘q');save();page();break}
+case 'dec':{if(--S.cart[k].q<1)S.cart.splice(k,1);save();page();break}
+case 'checkout':S.co=true;page();break;
+case 'dl':S.f.delivery=v;page();break;
+case 'promo':{const code=$('[data-p]').value.trim();if(!code){S.promo=null;$('#sum').innerHTML=sum();break}S.promo=await api('/promo/check',{method:'POST',body:{code,subtotal:subtotal()}});toast('Promo qo‘llandi');$('#sum').innerHTML=sum();break}
+case 'place':{const f=S.f;el.disabled=true;try{await api('/orders',{method:'POST',body:{name:f.name||'',phone:f.phone||'',region:f.region||'',city:f.city||'',address:f.address||'',note:f.note||'',delivery:f.delivery||'courier',promo:S.promo?.code||'',items:S.cart.map(i=>({id:i.id,color:i.c,size:i.s,qty:i.q}))}});localStorage.mf=JSON.stringify({name:f.name,phone:f.phone,region:f.region,city:f.city,address:f.address});S.cart=[];save();S.co=false;S.promo=null;await loadAll();S.tab='prof';page();toast('Buyurtmangiz qabul qilindi ✅');tg?.HapticFeedback?.notificationOccurred('success')}finally{el.disabled=false}break}
+case 'adm':S.tab='adm';S.adm=null;page();await admLoad();break;
+case 'aht':{const p=S.adm.products.find(x=>x.id==id);await A('/products/'+id,{method:'PUT',body:{...p,active:!p.active}});await loadAll();await admLoad();break}
+case 'adl':if(confirm('O‘chirilsinmi?')){await A('/products/'+id,{method:'DELETE'});await loadAll();await admLoad()}break;
+case 'admadd':{const stock=Object.fromEntries(g('stock').split(',').map(x=>x.split('=')).filter(x=>x[1]).map(([a,b])=>[a.trim(),+b]));await A('/products',{method:'POST',body:{name:g('name'),category:g('category'),price:+g('price'),old_price:+g('old_price')||null,colors:csv(g('colors')),sizes:csv(g('sizes')),stock,images:csv(g('images')),material:g('material'),sku:g('sku'),description:g('description')}});toast('Mahsulot qo‘shildi');await loadAll();await admLoad();break}
+case 'admpromo':await A('/promos',{method:'POST',body:{code:g('pcode'),percent:+g('ppct')||0,fixed:+g('pfix')||0,limit:+g('plim')||null}});toast('Promo yaratildi');await admLoad();break;
+case 'admfee':await A('/delivery',{method:'PUT',body:{tashkent:+g('ft'),region:+g('fr')}});await loadAll();toast('Saqlandi');break;
+case 'admbc':if(confirm('Barcha foydalanuvchilarga yuborilsinmi?')){await A('/broadcast',{method:'POST',body:{text:g('bc')}});toast('Yuborish boshlandi')}break;
+}}catch(x){toast(x.message)}};
+document.onchange=async e=>{const el=e.target,a=el.dataset.a;try{
+if(a==='sort'){S.sort=el.value;page()}else if(a==='size'){S.size=el.value;page()}
+else if(a==='ost'){await A(`/orders/${el.dataset.id}/status`,{method:'POST',body:{status:el.value}});toast('Status yangilandi, mijozga xabar ketdi')}}catch(x){toast(x.message)}};
+document.oninput=e=>{const f=e.target.dataset.f;if(f){S.f[f]=e.target.value;if(f==='region'){S.promo=S.promo;$('#sum').innerHTML=sum()}}};
+$('#hd').innerHTML='<div class=logo>MONTERA.UZ</div><input id=q placeholder="Qidirish: sviter, hoodie…" autocomplete=off><div id=sg></div>';
+$('#q').oninput=e=>{S.q=e.target.value.trim().toLowerCase();const m=S.q?[...new Set(S.P.map(p=>p.name).filter(n=>n.toLowerCase().includes(S.q)))].slice(0,5):[];$('#sg').innerHTML=m.map(n=>`<div class=sgi data-a=sg data-v="${H(n)}">${H(n)}</div>`).join('');S.tab='shop';page()};
+$('#app').innerHTML='<p class=empty>Yuklanmoqda…</p>';
+loadAll().then(page).catch(x=>$('#app').innerHTML=`<p class=empty>${H(x.message)}</p>`);
+</script></body></html>
